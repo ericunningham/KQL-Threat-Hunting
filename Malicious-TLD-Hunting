@@ -1,0 +1,16 @@
+DeviceNetworkEvents
+// Define the time you are interested to look into
+| where TimeGenerated > ago(1d)
+// Remove the line below in case you want to look into both successful and unsuccessful events
+| where ActionType == "ConnectionSuccess"
+// The line below refers to connections made when requesting a .zip through file explorer
+// | where InitiatingProcessFileName == @"svchost.exe"
+// Define RemoteURL
+| where RemoteUrl startswith "https://" or RemoteUrl startswith "http://"
+// Define domain as a string that includes a domain exclusively leaving outside .zip or .mov accessed files for download
+| extend domain = tostring(extract("https?://([^:/]*)(:?)(/|$)", 1, RemoteUrl)) 
+// String should exclusively look for .zip or .mov TLDs
+| where domain endswith ".zip" or domain endswith ".mov"
+| project Timestamp, DeviceName, ActionType, RemoteUrl
+// Sort by newsest events first
+| sort by Timestamp desc 
