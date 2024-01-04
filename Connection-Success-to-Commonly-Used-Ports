@@ -1,1 +1,8 @@
+\\Hunting query to show Connections on Commonly Used Ports without commonlt used services
 
+DeviceNetworkEvents
+| where TimeGenerated > ago(60d)
+| where ActionType == 'ConnectionSuccess'
+| where RemoteUrl !contains "microsoft" and RemoteUrl !contains "office365" and RemoteUrl !contains "google" and RemoteUrl !contains "windows" and RemoteUrl !contains "office" 
+| summarize CountConnections = count() by RemoteUrl, RemotePort
+| order by CountConnections asc
