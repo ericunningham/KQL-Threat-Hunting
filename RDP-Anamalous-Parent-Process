@@ -1,0 +1,5 @@
+DeviceNetworkEvents
+| where TimeGenerated > ago(60d)
+| where RemoteUrl !contains "microsoft" and RemoteUrl !contains "office365" and RemoteUrl !contains "windows" and RemoteUrl !contains "office" 
+| where RemotePort == 3389
+| summarize count() by InitiatingProcessParentFileName
