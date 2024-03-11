@@ -1,0 +1,6 @@
+SysmonEvent
+| where EventID == 11
+| where TargetFilename has_any (ExecutableFileExtensions) and TargetFilename !startswith "C:\\Windows\\" and TargetFilename !has "Windows Defender Advanced Threat"
+| where TargetFilename !endswith "DismHost.exe" and TargetFilename !has "\\Microsoft\\" and TargetFilename !contains "PSScriptPolicyTest_" and TargetFilename !has "Microsoft Monitoring" and TargetFilename !has "Azure Advanced"
+| where TargetFilename !startswith "C:\\System Volume Information\\DFSR" and TargetFilename !endswith "vbs.CMD" and TargetFilename !endswith "xdrhealth.exe" and TargetFilename !endswith "cytool.exe" and TargetFilename !endswith "t-ms"
+| summarize count() by tostring(TargetFilename)
