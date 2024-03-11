@@ -1,0 +1,5 @@
+DeviceNetworkEvents
+| where DeviceName in (computerList)
+| where RemoteIPType == "Public"
+| where RemoteUrl !endswith ".microsoft.com" //and isnotempty(RemoteUrl)
+| summarize count() by InitiatingProcessFileName
