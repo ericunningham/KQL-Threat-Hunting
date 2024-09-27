@@ -1,0 +1,7 @@
+CommonSecurityLog
+| where Protocol has "udp"
+| where DestinationPort in (631)
+| extend ip_location = geo_info_from_ip_address(SourceIP)
+| extend Country = tostring(ip_location.country)
+| summarize Count=count() by Country
+|sort by Count desc
