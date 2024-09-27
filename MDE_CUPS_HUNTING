@@ -1,0 +1,13 @@
+union isfuzzy=true
+(_Im_NetworkSession_CiscoASAV10()
+),
+(_Im_NetworkSession_FortinetFortiGateV04()
+),
+(_Im_NetworkSession_PaloAltoCEFV07()
+)
+//Include any other 
+| where DstPortNumber == 631
+   or SrcPortNumber == 631
+| where not(ipv4_is_private(IpAddr))
+| where IpAddr != "127.0.0.1"
+| where DvcAction has "Allow"
