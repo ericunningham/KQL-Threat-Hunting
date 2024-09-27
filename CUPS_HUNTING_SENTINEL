@@ -1,0 +1,12 @@
+DeviceNetworkEvents
+| where LocalPort == 631
+    | where not(ipv4_is_private(RemoteIP))
+    | where RemoteIP != "127.0.0.1"
+    | where not(RemoteIP startswith "169.254")
+| join kind=inner (
+    DeviceInfo
+    | distinct DeviceName, OSVersion, OSDistribution, DeviceType, OSPlatform, IsInternetFacing) on DeviceName
+    | extend ParsedAddFields = parse_json(AdditionalFields)
+    | extend PacketSize = tostring(ParsedAddFields.["Packet Size"])
+| project TimeGenerated, ActionType, DeviceName, InitiatingProcessAccountName, PacketSize, LocalPort, LocalIP, RemotePort, RemoteIP, RemoteUrl, InitiatingProcessFileName, OSPlatform, OSDistribution, OSVersion, DeviceType, IsInternetFacing
+| where OSPlatform contains "Linux"
